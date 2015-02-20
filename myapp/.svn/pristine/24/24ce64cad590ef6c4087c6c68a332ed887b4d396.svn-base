@@ -1,0 +1,330 @@
+ /* 
+	author: @Manuel Birba
+	date : 
+*/
+
+Ext.define('MyApp.view.Main', { /* "MyApp" == APP's name ; "view" == subfolder of "app"; "Main" == file's name ".js" */
+    extend: 'Ext.tab.Panel', /* MyApp.view.Main inherits of tab.Panel's class */
+    xtype: 'main',
+    requires: [
+        'Ext.TitleBar',
+        'Ext.Map',
+        'Ext.Img',
+        'Ext.dataview.List',
+        'Ext.XTemplate'
+    ],
+    config: {
+        tabBarPosition: 'bottom', /* this component will contain these following buttons : "Welcome", "Geolocation", "COI", "Fb login"*/
+
+        items: [ 
+					{ /* first item : Welcome screen */
+		
+					title: 'Welcome',
+					iconCls: 'home',
+
+					styleHtmlContent: true,
+					scrollable: true,
+
+					items: [{
+						docked: 'top',
+						xtype: 'titlebar',
+						title: 'Date your Neighbor'
+					},
+					{
+						docked: 'bottom',
+						xtype: 'image',
+						src: 'resources/icons/aubaypng.png',
+						height: 49,
+						width: 49
+						//flex: 5
+					},
+				],
+
+				html: [
+					'<h3>Welcome to Mikutano </h3>',
+					"It's a Dating mobile application Based on Geolocation & Center Of Interest (C.O.I) ",
+					"<p>enjoy yourself !!!</p>",
+					'<!-- <img src="resources/icons/aubaypng.png"/> We can add an image like this way too-->',
+				].join("")
+				},
+				{ /* seconde item : Geolocation screen */
+			
+					title: 'COI',
+					iconCls: 'info',
+					items: [{
+								docked: 'top',
+								xtype: 'titlebar',
+								title: 'Your interests',
+								margin: '0 0 20 0' //'Up Right Down Left'
+							},
+							{
+								xtype: 'container',
+								layout: {
+											type: 'hbox',
+											pack: 'center'
+										},
+								items: [
+										{
+											xtype: 'button',
+											width: 100,
+											height: 20,
+											id: 'likeButton',
+											text: 'Likes',
+											listeners: {
+												tap: function(button, e ,eOpts) {
+													alert("Please open your console and see your FacebookLikes");
+													//please see getFriends.js file to improve the feature
+													getLikes();
+												}
+											}
+										},
+										{
+											xtype: 'spacer',
+											width: 10
+										},
+										{
+											xtype: 'button',
+											width: 100,
+											height: 20,
+											text: 'tweets',
+											listeners: {
+												tap: function() {
+													alert("Tweets function coming soon");
+													//please see getTweets.js file to improve the feature
+												}
+											}
+										},
+										{
+											xtype: 'dataview',
+											margin: '20 0 0 0', //'Up Right Down Left'
+											docked: 'bottom',
+											centered: true, // centered the mapItem inside the " xtype: 'container' "
+											height: 200,
+											id: 'dataLikesList',
+											//bind the store
+											store: "TestStore",	
+											itemTpl: [
+												'<div>id : {likeid} name : {likename} category : {likecategory} date : {likedate} description : {likedescription}</div>',
+											]
+											
+										},
+										{
+											xtype: 'dataview',
+											margin: '20 0 0 0', //'Up Right Down Left'
+											docked: 'bottom',
+											centered: true, // centered the mapItem inside the " xtype: 'container' "
+											height: 200,
+											id: 'dataLikesList2',
+											//bind the store
+											store: {
+													fields: ['name', 'like'],
+													data: [
+														{name: 'Manuel', like: 'karting'},
+														{name: 'Matthieu', like: 'movies'},
+														{name: 'Gaetan', like: 'sport'},
+														{name: 'Pbf', like: 'chil'},
+														{name: 'Antoine', like: 'babyfoot'}
+													]
+												},
+											itemTpl: [
+												'<div>{name} likes {like}</div>',
+												'<img src="{rating_img_url_small}"/>&nbsp;<small>{address1}</small>'
+											]
+											
+										}
+				   					   ]
+							},
+						   ],
+				},
+				{ /* third item : C.O.I screen */
+			
+					title: 'Geolocation',
+					iconCls: 'maps',
+					items: [
+								{
+									docked: 'top',
+									xtype: 'titlebar',
+									title: 'Mikutano World',
+									margin: '0 0 20 0' //'Up Right Down Left'
+								},
+								{
+									xtype: 'container',
+									layout: {
+												type: 'hbox',
+												pack: 'center',
+											},
+									items: [
+												{
+													xtype: 'button',
+													itemId: '',
+													width: 100,
+													height: 20,
+													text: 'I\' m here',
+													listeners: {
+														tap: function() {
+															//alert("Geolocation function coming soon");
+														
+																// In this piece of code we call the Facebook api to get the username and userid of Mikutano 
+																console.log('Welcome!  Fetching your information.... ');
+																FB.api('/me', function(response) {
+																  console.log('Good to see you, ' + response.name + '.');
+																  username = response.name;
+																  userid = response.id;
+																  console.log('username, ' + username + '.');
+																  console.log('userid, ' + response.id + '.');
+																});
+																
+														}
+													}
+												},
+												{
+													xtype: 'spacer',
+													width: 10
+												},
+												{
+													xtype: 'button',
+													width: 100,
+													height: 20,
+													text: 'Mikutaners',
+													listeners: {
+														tap: function() {
+															alert("Find Mikutaners function coming soon");
+														}
+													}
+												},
+												{
+													xtype: 'map',
+													margin: '20 0 0 0', //'Up Right Down Left'
+													title: 'Map',
+													id: 'MikutanoMap',
+													docked: 'bottom',
+													centered: true, // centered the mapItem inside the " xtype: 'container' "
+													height: 200,
+													useCurrentLocation: false,
+													flex: 3,
+													mapOptions: {
+														zoom: 17,
+														mapTypeId: google.maps.MapTypeId.ROADMAP,
+														mapTypeControl : true,
+														navigationControl : false,
+														streetViewControl : false,
+														backgroundColor: 'transparent',
+														disableDoubleClickZoom: true,
+														draggable: true,
+														keyboardShortcuts: false,
+														scrollwheel: true,
+														// Center your map to see your first marker ;)
+														center: new google.maps.LatLng (48.858706,2.347456) // center on Chatelet 75001
+													}
+													,listeners: {
+														maprender: function() {
+															//mapLaunch();
+														
+															// Get a ref to the google map object (should be provided
+															// as an argument to the listener but apparently there is
+															// a bug...)
+															var gMap = this.getMap();
+															new google.maps.Marker({
+																map: gMap,
+																animation: google.maps.Animation.DROP,
+																position: new google.maps.LatLng (48.814801,2.378355), //Position ESIEA
+																title:"ESIEA"
+															});
+															new google.maps.Marker({
+																map: gMap,
+																animation: google.maps.Animation.DROP,
+																position: new google.maps.LatLng (48.858706,2.347456), //Position Chatelet
+																title:"Carte centrée sur : Chatelet"
+															});
+
+															var geo = Ext.create('Ext.util.Geolocation', {
+																autoUpdate: true,
+																listeners: {
+																	locationupdate: function (geo) {//update the curent location = center
+																		var mikutanoUserLocation = new google.maps.LatLng(geo.getLatitude(), geo.getLongitude());
+																		//My facebook's Id is '604664361' 
+																		var url = 'http://graph.facebook.com/'+userid+'/picture';
+																		var usermarker = username; //variable to display the Mikutano's user name
+																		
+																		var infoWindow = new google.maps.InfoWindow({
+																			content: 'this is where I work'
+																		});
+																		
+																		// an other way: use Ext.get('id of an map xtype'), var gmap = Ext.getCmp('MikutanoMap').getMap();
+																		var marker = new google.maps.Marker({
+																			position: new google.maps.LatLng(37.0625,-95.67706),
+																			map: gMap,
+																			title: 'My office'
+																		});
+																		
+																		google.maps.event.addListener(marker,'click',
+																			function() {infoWindow.open(gMap, marker);
+																		});			
+																		
+																		var marker = new google.maps.Marker({
+																			position: mikutanoUserLocation,
+																			map: gMap,
+																			icon : url,
+																			title: usermarker
+																		});
+																		
+																	},
+																	locationerror: function (geo, bTimeout, bPermissionDenied, bLocationUnavailable, message) {
+																		if (bTimeout) {
+																			Ext.Msg.alert('Timeout occurred.');
+																		} else {
+																			Ext.Msg.alert('Error occurred.');
+																		}
+																	}
+																}
+															});
+															geo.updateLocation();
+														}//
+													}
+												}
+										   ]
+								},
+						   ],
+				},
+				{ /* fourth item*/
+			
+					title: 'FB',
+					iconCls: 'star',
+
+					styleHtmlContent: true,
+					scrollable: true,
+				
+					   items: [{
+							docked: 'top',
+							xtype: 'titlebar',
+							title: 'Fb login'
+					
+						},
+						{
+							xtype: 'button',
+							id : 'connard',
+							docked: 'bottom',
+							centered: true,
+							margin: '0 0 20 0', //'Up Right Down Left'
+							width: '100%',
+							text: 'My Friends',
+					
+							listeners: {
+							tap: function() {
+								alert("Please open your console and see your FacebookFriends");
+								getFriends();
+								}
+							}
+						},
+						],
+				
+						html: [
+							" Log with Facebook account",
+							'<div id="fb-root"></div>',
+							'<fb:login-button show-faces="true" width="300" max-rows="1" scope="user_likes" auto_logout_link="true" ></fb:login-button>',
+					
+						].join(""),
+				}
+        	   ]
+			}
+		});

@@ -1,0 +1,36 @@
+var appIDFacebook = "184484190795";
+alert("Facebook appID " + appIDFacebook);
+
+function updateButton(response) {
+  Log.info('Updating Button', response);
+  var button = document.getElementById('fb-auth');
+
+  if (response.status === 'connected') {
+    alert(response.status);
+    button.innerHTML = 'Logout pour vous déconect';
+    button.className = 'btn btn-danger';
+    button.onclick = function() {
+      FB.logout(function(response) {
+        Log.info('FB.logout callback', response);
+      });
+    };
+  } else {
+    alert(response.status);
+    button.innerHTML = 'Login pour vous coonecter';
+    button.className = 'btn btn-success';
+    button.onclick = function() {
+      FB.login(function(response) {
+        Log.info('FB.login callback', response);
+        if (response.status === 'connected') {
+          Log.info('User is logged in');
+        } else {
+          Log.info('User is logged out');
+        }
+      });
+    };
+  }
+}
+
+
+FB.getLoginStatus(updateButton);
+FB.Event.subscribe('auth.statusChange', updateButton);

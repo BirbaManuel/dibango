@@ -1,0 +1,104 @@
+Ext.define('MyApp.view.Main', { /* "MyApp" == nom de l'application; "view" == sous dossier de "app"; "Main" == nom du fichier ".js" */
+    extend: 'Ext.tab.Panel', /* MyApp.view.Main hérite de la classe tab.Panel */
+    xtype: 'main',
+    requires: [
+        'Ext.TitleBar',
+        'Ext.Map',
+        'Ext.Video'
+    ],
+    config: {
+        tabBarPosition: 'bottom', /* ce composant va contenir les boutons "Welcome", "Get started", "Geolocation", "COI", "Contact"*/
+
+        items: [
+            { /* first item*/
+            
+                title: 'Welcome',
+                iconCls: 'home',
+                cls: 'home',
+
+                styleHtmlContent: true,
+                scrollable: true,
+
+                items: {
+                    docked: 'top',
+                    xtype: 'titlebar',
+                    title: 'Date your Neighbor'
+                },
+
+                html: [
+                	'<div id="fb-root"></div>',
+                	'<fb:login-button show-faces="true" width="300" max-rows="1" scope="user_likes" auto_logout_link="true" ></fb:login-button>',
+                    '<h3>Welcome to Mikutano </h3>',
+                    "It's a Dating mobile application Based on Geolocation & Center Of Interest (COI) ",
+                    "<p>enjoy yourself</p>",
+                    '<img src="resources/icons/aubaypng.png" />',
+                ].join("")
+            },
+            { /* seconde item*/
+            
+                title: 'Geolocation',
+                iconCls: 'maps',
+
+                styleHtmlContent: true,
+                scrollable: true,
+
+                items: [{
+                    docked: 'top',
+                    xtype: 'titlebar',
+                    title: 'Current position'
+                },
+                {
+                xtype: 'map',
+                title: 'Map',
+                height: 'remain unset',
+                id: 'detailMap'
+                }],
+
+                html: [
+                    " Here is your current location, you will see others users near to you !"
+                ].join("")
+            },
+            { /* third item*/
+            
+                title: 'COI',
+                iconCls: 'info',
+
+                styleHtmlContent: true,
+                scrollable: true,
+
+                items: {
+                    docked: 'top',
+                    xtype: 'titlebar',
+                    title: 'Your Center of interest',
+                    
+                },
+
+                html: [
+                    " Here is your COI (Center of Interest !",
+                    "<p>We have recovered all your Facebook Like</p>",
+                    '<img src="resources/icons/facebooklike.png" />',
+                ].join("")
+            },
+            { /* third item*/
+            
+                title: 'FB',
+                iconCls: 'star',
+
+                styleHtmlContent: true,
+                scrollable: true,
+
+                items: {
+                    docked: 'top',
+                    xtype: 'titlebar',
+                    title: 'Fb login',
+                    
+                },
+
+                html: [
+                    " Log with Facebook account",
+                    
+                ].join("")
+            }
+        ]
+    }
+});
